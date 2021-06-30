@@ -302,6 +302,22 @@
                             <constraint firstItem="DC3-Ia-6L7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="vTI-88-p1o"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="CurrentNumberLabel" destination="Lwz-OF-XHD" id="SIc-2j-YJU"/>
+                        <outlet property="CurrentSignLabel" destination="HPC-iy-qdm" id="nCO-G0-JKv"/>
+                        <outlet property="dotButton" destination="h8q-5h-bnb" id="Fai-hr-pbE"/>
+                        <outlet property="numberDoubleZeroButton" destination="sH6-8l-kje" id="QIk-Mx-NVu"/>
+                        <outlet property="numberEightButton" destination="xgT-2D-A49" id="LYJ-xV-Eyh"/>
+                        <outlet property="numberFiveButton" destination="vpW-df-OLm" id="erh-PK-yVE"/>
+                        <outlet property="numberFourButton" destination="hQm-yz-XvG" id="hBn-a6-MSP"/>
+                        <outlet property="numberNineButton" destination="zcj-xJ-ruw" id="MP5-TB-ySw"/>
+                        <outlet property="numberOneButton" destination="nCE-qB-NiN" id="4IU-vo-g5u"/>
+                        <outlet property="numberSevenButton" destination="L6z-2G-Gar" id="FWg-zL-cSD"/>
+                        <outlet property="numberSixButton" destination="OaY-Mw-CPv" id="HFo-B1-y3l"/>
+                        <outlet property="numberThreeButton" destination="X8H-iH-tSd" id="Iz0-97-tzU"/>
+                        <outlet property="numberTwoButton" destination="Rif-2S-UU2" id="Mto-S7-cHY"/>
+                        <outlet property="numberZeroButton" destination="mSz-Y3-r5Z" id="Cqz-2w-ptb"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
