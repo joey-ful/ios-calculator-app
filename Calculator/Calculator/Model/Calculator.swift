@@ -48,8 +48,8 @@ struct Calculator {
     }
     
     private func hasHigherPriority(this: String, than: String) throws -> Bool {
-        let currentOperator: Operator = try Operator.convertToOperator(string: this)
-        let thanOperator: Operator = try Operator.convertToOperator(string: than)
+        let currentOperator: Operator = try Operator.convert(from: this)
+        let thanOperator: Operator = try Operator.convert(from: than)
         return currentOperator > thanOperator
     }
 
@@ -91,21 +91,18 @@ struct Calculator {
     private func solve(firstOperand: Double, secondOperand: Double, `operator`: Operator) throws -> Double {
         switch `operator` {
         case .plus:
-            return firstOperand + secondOperand
+            return plus(firstOperand: firstOperand, secondOperand: secondOperand)
         case .minus:
-            return firstOperand - secondOperand
+            return minus(firstOperand: firstOperand, secondOperand: secondOperand)
         case .multiply:
-            return firstOperand * secondOperand
+            return multiply(firstOperand: firstOperand, secondOperand: secondOperand)
         case .divide:
-            try checkDivisionError(operator: "/", secondOperand: secondOperand)
-            return firstOperand / secondOperand
-        default:
-            throw CalculatorError.unknownOperator
+            return try divide(firstOperand: firstOperand, secondOperand: secondOperand)
         }
     }
     
-    private func checkDivisionError(operator: String, secondOperand: Double) throws {
-        if `operator` == "/" && secondOperand == 0.0 {
+    private func checkDivisionError(secondOperand: Double) throws {
+        if secondOperand == 0.0 {
             throw CalculatorError.divisionByZero
         }
     }
@@ -121,4 +118,25 @@ struct Calculator {
         }
         return result
     }
+}
+
+extension Calculator: Calculatable {
+    func plus(firstOperand: Double, secondOperand: Double) -> Double {
+        return firstOperand + secondOperand
+    }
+    
+    func minus(firstOperand: Double, secondOperand: Double) -> Double {
+        return firstOperand - secondOperand
+    }
+    
+    func multiply(firstOperand: Double, secondOperand: Double) -> Double {
+        return firstOperand * secondOperand
+    }
+    
+    func divide(firstOperand: Double, secondOperand: Double) throws -> Double {
+        try checkDivisionError(secondOperand: secondOperand)
+        return firstOperand / secondOperand
+    }
+    
+    
 }
