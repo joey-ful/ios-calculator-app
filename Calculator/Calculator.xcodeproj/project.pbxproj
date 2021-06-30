@@ -95,8 +95,8 @@
 		D45B477D268C06050017EA54 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				D4FE3E922682C43A00040B43 /* Stack.swift */,
 				D3F4E2552682C5F100CC58C8 /* Calculator.swift */,
+				D4FE3E922682C43A00040B43 /* Stack.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

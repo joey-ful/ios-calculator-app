@@ -7,12 +7,25 @@
 
 import Foundation
 
-enum CalculatorError: Error {
+enum CalculatorError: Error, LocalizedError {
     case unknownOperator
-    case divisionByZero(description: String)
-    case invalidEquation
+    case divisionByZero
     case vacantEquation
     case unknownError
+    
+    var errorDescription: String? {
+        switch self {
+        case .unknownOperator:
+            return "알 수 없는 연산자입니다."
+        case .divisionByZero:
+            return "NaN"
+        case .vacantEquation:
+            return "식이 비었습니다."
+        case .unknownError:
+            return "알 수 없는 에러가 발생했습니다."
+        }
+        
+    }
 }
 
 enum Operator {
@@ -43,8 +56,8 @@ struct Calculator {
             let operationResult = try calculatePostfix(postfix: postfix)
             let finalResult: String = try format(number: operationResult)
             return finalResult
-        } catch CalculatorError.divisionByZero(let message){
-            return message
+        } catch CalculatorError.divisionByZero {
+            return CalculatorError.divisionByZero.localizedDescription
         } catch {
             return ""
         }
@@ -89,7 +102,7 @@ struct Calculator {
 
     private func checkDivisionError(operator: String, secondOperand: Double) throws {
         if `operator` == "/" && secondOperand == 0.0 {
-            throw CalculatorError.divisionByZero(description: "NaN")
+            throw CalculatorError.divisionByZero
         }
     }
 
