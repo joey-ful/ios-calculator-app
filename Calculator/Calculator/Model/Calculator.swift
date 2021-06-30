@@ -76,7 +76,7 @@ struct Calculator {
         }
         return result
     }
-    
+
     private func calculateToValue(operator: String, tempNumberStack: inout Stack<Double>) throws {
         guard let secondOperand = tempNumberStack.pop(),
               let firstOperand = tempNumberStack.pop()
