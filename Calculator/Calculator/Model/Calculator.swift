@@ -65,7 +65,11 @@ enum Operator {
 }
 
 struct Calculator {
-    func calculate(infix: [String]) throws -> String {
+    var postfix: [String] = []
+    var temporarySignStack = Stack<String>()
+    var temporaryNumberStack = Stack<Double>()
+    
+    mutating func calculate(infix: [String]) throws -> String {
         let postfix: [String] = try changeToPostfixNotation(infix: infix)
         do {
             let operationResult = try calculatePostfix(postfix: postfix)
@@ -78,24 +82,20 @@ struct Calculator {
         }
     }
     //MARK:- 중위연산을 후위연산으로 바꿔주는 부분
-    private func changeToPostfixNotation(infix: [String]) throws -> [String] {
-        var temporarySignStack = Stack<String>()
-        var postfix: [String] = []
+    private mutating func changeToPostfixNotation(infix: [String]) throws -> [String] {
         for element in infix {
             if Double(element) != nil {
                 postfix.append(element)
             } else {
-                try popAndAppend(sign: element, from: &temporarySignStack, to: &postfix)
+                try popAndAppend(sign: element)
                 temporarySignStack.push(element)
             }
         }
-        try popAndAppendLeftovers(from: &temporarySignStack, to: &postfix)
+        try popAndAppendLeftovers()
         return postfix
     }
     
-    private func popAndAppend(sign: String,
-                              from temporarySignStack: inout Stack<String>,
-                              to postfix: inout [String]) throws {
+    private mutating func popAndAppend(sign: String) throws {
         while let topOfTemporarySignStack = temporarySignStack.top,
               try hasHigherPriority(this: sign, than: topOfTemporarySignStack) == false {
             if let poppedSign = temporarySignStack.pop() {
@@ -110,8 +110,7 @@ struct Calculator {
         return currentOperator > thanOperator
     }
 
-    private func popAndAppendLeftovers(from temporarySignStack: inout Stack<String>,
-                                       to postfix: inout [String]) throws{
+    private mutating func popAndAppendLeftovers() throws{
         while temporarySignStack.isEmpty == false {
             if let poppedSign = temporarySignStack.pop() {
                 postfix.append(poppedSign)
@@ -120,13 +119,13 @@ struct Calculator {
     }
 
     //MARK:- 후위연산을 계산해주는 부분
-    private func calculatePostfix(postfix: [String]) throws -> Double {
-        var temporaryNumberStack = Stack<Double>()
+    private mutating func calculatePostfix(postfix: [String]) throws -> Double {
+        
         for element in postfix {
             if let number = Double(element) {
                 temporaryNumberStack.push(number)
             } else {
-                try calculateToValue(operator: element, tempNumberStack: &temporaryNumberStack)
+                try calculateToValue(operator: element)
             }
         }
         guard let result = temporaryNumberStack.pop() else {
@@ -135,14 +134,14 @@ struct Calculator {
         return result
     }
 
-    private func calculateToValue(operator: String, tempNumberStack: inout Stack<Double>) throws {
-        guard let secondOperand = tempNumberStack.pop(),
-              let firstOperand = tempNumberStack.pop()
+    private mutating func calculateToValue(operator: String) throws {
+        guard let secondOperand = temporaryNumberStack.pop(),
+              let firstOperand = temporaryNumberStack.pop()
         else {
             return
         }
         let operationResult = try solve(firstOperand: firstOperand, secondOperand: secondOperand, operator: `operator`)
-        tempNumberStack.push(operationResult)
+        temporaryNumberStack.push(operationResult)
     }
 
     private func solve(firstOperand: Double, secondOperand: Double, `operator`: String) throws -> Double {

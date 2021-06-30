@@ -9,7 +9,7 @@
 import XCTest
 
 class CalculatorTests: XCTestCase {
-    let sut = Calculator()
+    var sut = Calculator()
 
     func test_1더하기2더하기3은6() {
         let 중위연산식 = ["1", "+", "2", "+", "3"]
