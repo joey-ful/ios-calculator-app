@@ -6,6 +6,7 @@
 
 import UIKit
 
+//MARK: - 프로퍼티 선언 및 라이프사이클
 class ViewController: UIViewController {
 
     @IBOutlet var numberZeroButton: UIButton!
@@ -30,6 +31,11 @@ class ViewController: UIViewController {
         CurrentNumberLabel.text = "0"
         CurrentSignLabel.text = ""
     }
+
+}
+
+//MARK: - Action
+extension ViewController {
     @objc func inputNumberOnLabel(_ sender: UIButton) {
         switch sender {
         case numberZeroButton:
@@ -75,7 +81,7 @@ class ViewController: UIViewController {
         
         }
     }
-    
+
     func clickNumberButtons() {
         numberZeroButton.addTarget(self, action: #selector(inputNumberOnLabel(_:)), for: .touchUpInside)
         numberDoubleZeroButton.addTarget(self, action: #selector(inputNumberOnLabel(_:)), for: .touchUpInside)
@@ -90,7 +96,7 @@ class ViewController: UIViewController {
         numberEightButton.addTarget(self, action: #selector(inputNumberOnLabel(_:)), for: .touchUpInside)
         numberNineButton.addTarget(self, action: #selector(inputNumberOnLabel(_:)), for: .touchUpInside)
     }
-    
+
     func checkCurrentNumberLabel() {
         if CurrentNumberLabel.text == "0" {
             CurrentNumberLabel.text = ""
@@ -98,11 +104,4 @@ class ViewController: UIViewController {
             CurrentNumberLabel.text = ""
         }
     }
-    
-    func containsDot() {
-        if ((CurrentNumberLabel.text?.contains(".")) != nil) {
-            
-        }
-    }
 }
-
