@@ -24,6 +24,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var CurrentNumberLabel: UILabel!
     @IBOutlet weak var CurrentSignLabel: UILabel!
+    @IBOutlet weak var CEButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +33,9 @@ class ViewController: UIViewController {
         CurrentSignLabel.text = ""
     }
 
+    @IBAction func CEButtonTapped(_ sender: Any) {
+        CurrentNumberLabel.text = "0"
+    }
 }
 
 //MARK: - Action
