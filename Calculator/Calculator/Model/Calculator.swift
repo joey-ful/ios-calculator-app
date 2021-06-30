@@ -7,63 +7,6 @@
 
 import Foundation
 
-enum CalculatorError: Error, LocalizedError {
-    case unknownOperator
-    case divisionByZero
-    case vacantEquation
-    case unknownError
-    
-    var errorDescription: String? {
-        switch self {
-        case .unknownOperator:
-            return "알 수 없는 연산자입니다."
-        case .divisionByZero:
-            return "NaN"
-        case .vacantEquation:
-            return "식이 비었습니다."
-        case .unknownError:
-            return "알 수 없는 에러가 발생했습니다."
-        }
-        
-    }
-}
-
-enum Operator {
-    private static let lowPriority = 1
-    private static let highPriority = 2
-
-    case plus, minus
-    case multiply, divide
-
-    var priority: Int {
-        switch self {
-        case .plus, .minus:
-            return Operator.lowPriority
-        case .multiply, .divide:
-            return Operator.highPriority
-        }
-    }
-
-    static func >(lhs: Operator, rhs: Operator) -> Bool {
-        return lhs.priority > rhs.priority
-    }
-    
-    static func convertToOperator(string: String) throws -> Operator {
-        switch string {
-        case "+":
-            return .plus
-        case "-":
-            return .minus
-        case "*":
-            return .multiply
-        case "/":
-            return .divide
-        default:
-            throw CalculatorError.unknownOperator
-        }
-    }
-}
-
 struct Calculator {
     var postfix: [String] = []
     var temporarySignStack = Stack<String>()
