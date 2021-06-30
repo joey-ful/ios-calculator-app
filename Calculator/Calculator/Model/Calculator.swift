@@ -47,6 +47,21 @@ enum Operator {
     static func >(lhs: Operator, rhs: Operator) -> Bool {
         return lhs.priority > rhs.priority
     }
+    
+    static func convertToOperator(string: String) throws -> Operator {
+        switch string {
+        case "+":
+            return .plus
+        case "-":
+            return .minus
+        case "*":
+            return .multiply
+        case "/":
+            return .divide
+        default:
+            throw CalculatorError.unknownOperator
+        }
+    }
 }
 
 struct Calculator {
@@ -62,19 +77,49 @@ struct Calculator {
             return ""
         }
     }
-
-    private func format(number: Double) throws -> String {
-        let formatter: NumberFormatter = {
-            let formatter = NumberFormatter()
-            formatter.usesSignificantDigits = true
-            return formatter
-        }()
-        guard let result = formatter.string(from: NSNumber(value: number)) else {
-            throw CalculatorError.unknownError
+    //MARK:- 중위연산을 후위연산으로 바꿔주는 부분
+    private func changeToPostfixNotation(infix: [String]) throws -> [String] {
+        var temporarySignStack = Stack<String>()
+        var postfix: [String] = []
+        for element in infix {
+            if Double(element) != nil {
+                postfix.append(element)
+            } else {
+                try popAndAppend(sign: element, from: &temporarySignStack, to: &postfix)
+                temporarySignStack.push(element)
+            }
         }
-        return result
+        try popAndAppendLeftovers(from: &temporarySignStack, to: &postfix)
+        return postfix
+    }
+    
+    private func popAndAppend(sign: String,
+                              from temporarySignStack: inout Stack<String>,
+                              to postfix: inout [String]) throws {
+        while let topOfTemporarySignStack = temporarySignStack.top,
+              try hasHigherPriority(this: sign, than: topOfTemporarySignStack) == false {
+            if let poppedSign = temporarySignStack.pop() {
+                postfix.append(poppedSign)
+            }
+        }
+    }
+    
+    private func hasHigherPriority(this: String, than: String) throws -> Bool {
+        let currentOperator: Operator = try Operator.convertToOperator(string: this)
+        let thanOperator: Operator = try Operator.convertToOperator(string: than)
+        return currentOperator > thanOperator
     }
 
+    private func popAndAppendLeftovers(from temporarySignStack: inout Stack<String>,
+                                       to postfix: inout [String]) throws{
+        while temporarySignStack.isEmpty == false {
+            if let poppedSign = temporarySignStack.pop() {
+                postfix.append(poppedSign)
+            }
+        }
+    }
+
+    //MARK:- 후위연산을 계산해주는 부분
     private func calculatePostfix(postfix: [String]) throws -> Double {
         var temporaryNumberStack = Stack<Double>()
         for element in postfix {
@@ -100,12 +145,6 @@ struct Calculator {
         tempNumberStack.push(operationResult)
     }
 
-    private func checkDivisionError(operator: String, secondOperand: Double) throws {
-        if `operator` == "/" && secondOperand == 0.0 {
-            throw CalculatorError.divisionByZero
-        }
-    }
-
     private func solve(firstOperand: Double, secondOperand: Double, `operator`: String) throws -> Double {
         switch `operator` {
         case "+":
@@ -121,60 +160,22 @@ struct Calculator {
             throw CalculatorError.unknownOperator
         }
     }
-
-    private func convertToOperator(string: String) throws -> Operator {
-        switch string {
-        case "+":
-            return .plus
-        case "-":
-            return .minus
-        case "*":
-            return .multiply
-        case "/":
-            return .divide
-        default:
-            throw CalculatorError.unknownOperator
-        }
-    }
-
-    private func changeToPostfixNotation(infix: [String]) throws -> [String] {
-        var temporarySignStack = Stack<String>()
-        var postfix: [String] = []
-        for element in infix {
-            if Double(element) != nil {
-                postfix.append(element)
-            } else {
-                try popAndAppend(sign: element, from: &temporarySignStack, to: &postfix)
-                temporarySignStack.push(element)
-            }
-        }
-        try popAndAppendLeftovers(from: &temporarySignStack, to: &postfix)
-        return postfix
-    }
-
-    private func hasHigherPriority(this: String, than: String) throws -> Bool {
-        let currentOperator: Operator = try convertToOperator(string: this)
-        let thanOperator: Operator = try convertToOperator(string: than)
-        return currentOperator > thanOperator
-    }
     
-    private func popAndAppend(sign: String,
-                              from temporarySignStack: inout Stack<String>,
-                              to postfix: inout [String]) throws {
-        while let topOfTemporarySignStack = temporarySignStack.top,
-              try hasHigherPriority(this: sign, than: topOfTemporarySignStack) == false {
-            if let poppedSign = temporarySignStack.pop() {
-                postfix.append(poppedSign)
-            }
+    private func checkDivisionError(operator: String, secondOperand: Double) throws {
+        if `operator` == "/" && secondOperand == 0.0 {
+            throw CalculatorError.divisionByZero
         }
     }
-
-    private func popAndAppendLeftovers(from temporarySignStack: inout Stack<String>,
-                                       to postfix: inout [String]) throws{
-        while temporarySignStack.isEmpty == false {
-            if let poppedSign = temporarySignStack.pop() {
-                postfix.append(poppedSign)
-            }
+//MARK:- 연산결과를 가공해주는 부분
+    private func format(number: Double) throws -> String {
+        let formatter: NumberFormatter = {
+            let formatter = NumberFormatter()
+            formatter.usesSignificantDigits = true
+            return formatter
+        }()
+        guard let result = formatter.string(from: NSNumber(value: number)) else {
+            throw CalculatorError.unknownError
         }
+        return result
     }
 }
