@@ -68,7 +68,8 @@ struct Calculator {
             if let number = Double(element) {
                 temporaryNumberStack.push(number)
             } else {
-                try calculateToValue(operator: element)
+                let `operator` = try Operator.convert(from: element)
+                try calculateToValue(operator: `operator`)
             }
         }
         guard let result = temporaryNumberStack.pop() else {
@@ -77,7 +78,7 @@ struct Calculator {
         return result
     }
 
-    private mutating func calculateToValue(operator: String) throws {
+    private mutating func calculateToValue(`operator`: Operator) throws {
         guard let secondOperand = temporaryNumberStack.pop(),
               let firstOperand = temporaryNumberStack.pop()
         else {
@@ -87,15 +88,15 @@ struct Calculator {
         temporaryNumberStack.push(operationResult)
     }
 
-    private func solve(firstOperand: Double, secondOperand: Double, `operator`: String) throws -> Double {
+    private func solve(firstOperand: Double, secondOperand: Double, `operator`: Operator) throws -> Double {
         switch `operator` {
-        case "+":
+        case .plus:
             return firstOperand + secondOperand
-        case "-":
+        case .minus:
             return firstOperand - secondOperand
-        case "*":
+        case .multiply:
             return firstOperand * secondOperand
-        case "/":
+        case .divide:
             try checkDivisionError(operator: "/", secondOperand: secondOperand)
             return firstOperand / secondOperand
         default:

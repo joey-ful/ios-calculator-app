@@ -11,8 +11,10 @@ enum Operator {
     private static let lowPriority = 1
     private static let highPriority = 2
 
-    case plus, minus
-    case multiply, divide
+    case plus
+    case minus
+    case multiply
+    case divide
 
     var priority: Int {
         switch self {
@@ -27,8 +29,8 @@ enum Operator {
         return lhs.priority > rhs.priority
     }
     
-    static func convertToOperator(string: String) throws -> Operator {
-        switch string {
+    static func convert(from symbol: String) throws -> Operator {
+        switch symbol {
         case "+":
             return .plus
         case "-":
