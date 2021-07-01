@@ -74,10 +74,13 @@ class ViewController: UIViewController {
     }
     
     @IBAction func shiftSignButtonTapped(_ sender: Any) {
-        if CurrentNumberLabel.text == "0" {
+        guard let numberText = CurrentNumberLabel.text, numberText != "0" else {
             return
+        }
+        if numberText.contains("-") == false {
+            CurrentNumberLabel.text?.insert("-", at: numberText.startIndex)
         } else {
-            
+            CurrentNumberLabel.text?.removeFirst()
         }
     }
 }
@@ -91,7 +94,7 @@ extension ViewController {
         label.font = UIFont.preferredFont(forTextStyle: .title3)
         return label
     }
-    
+
     func appendStackView(operatorLabel: UILabel?, numberLabel: UILabel) {
         let stackView = UIStackView()
         stackView.spacing = 8
@@ -101,7 +104,7 @@ extension ViewController {
         stackView.addArrangedSubview(numberLabel)
         historyStack.addArrangedSubview(stackView)
     }
-    
+
     @objc func inputNumberOnLabel(_ sender: UIButton) {
         switch sender {
         case numberZeroButton:
