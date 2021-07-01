@@ -106,6 +106,7 @@ struct Calculator {
             throw CalculatorError.divisionByZero
         }
     }
+    
 //MARK:- 연산결과를 가공해주는 부분
     private func format(number: Double) throws -> String {
         let formatter: NumberFormatter = {
@@ -137,6 +138,4 @@ extension Calculator: Calculatable {
         try checkDivisionError(secondOperand: secondOperand)
         return firstOperand / secondOperand
     }
-    
-    
 }

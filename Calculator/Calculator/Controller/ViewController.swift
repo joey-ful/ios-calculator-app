@@ -37,10 +37,26 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         clickNumberButtons()
+        initializeCurrentSignAndNumber()
+    }
+    
+    func initializeCurrentSignAndNumber() {
         CurrentNumberLabel.text = "0"
         CurrentSignLabel.text = ""
     }
 
+    @IBAction func ACButtonTapped(_ sender: Any) {
+        infix = []
+        clearHistoryStack()
+        initializeCurrentSignAndNumber()
+    }
+    
+    func clearHistoryStack() {
+        for history in historyStack.arrangedSubviews {
+            history.removeFromSuperview()
+        }
+    }
+    
     @IBAction func CEButtonTapped(_ sender: Any) {
         CurrentNumberLabel.text = "0"
     }
