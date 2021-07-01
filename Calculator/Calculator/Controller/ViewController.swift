@@ -26,6 +26,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var CurrentSignLabel: UILabel!
     @IBOutlet weak var CEButton: UIButton!
     
+    @IBOutlet weak var divideButton: UIButton!
+    @IBOutlet weak var multiplyButton: UIButton!
+    @IBOutlet weak var minusButton: UIButton!
+    @IBOutlet weak var plusButton: UIButton!
+    @IBOutlet weak var historyStack: UIStackView!
+    
+    var infix: [String] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         clickNumberButtons()
@@ -36,10 +44,64 @@ class ViewController: UIViewController {
     @IBAction func CEButtonTapped(_ sender: Any) {
         CurrentNumberLabel.text = "0"
     }
+    
+    @IBAction func operatorButtonTapped(_ sender: UIButton) {
+        guard let currentNumberText = CurrentNumberLabel.text,
+              let currentSignText = CurrentSignLabel.text,
+              let operatorButtonLabel = sender.titleLabel else {
+            return
+        }
+
+        CurrentSignLabel.text = operatorButtonLabel.text
+        
+        if currentNumberText != "0" {
+            let numberLabel = createUILabel(text: currentNumberText)
+            var operatorLabel: UILabel?
+            if infix.isEmpty {
+                infix.append(currentNumberText)
+            } else {
+                infix.append(currentSignText)
+                infix.append(currentNumberText)
+                operatorLabel = createUILabel(text: currentSignText)
+            }
+            appendStackView(operatorLabel: operatorLabel, numberLabel: numberLabel)
+            CurrentNumberLabel.text = "0"
+        }
+    }
+    
+    func raiseToStack(operator: String, number: String) {
+        
+    }
+    
+    @IBAction func shiftSignButtonTapped(_ sender: Any) {
+        if CurrentNumberLabel.text == "0" {
+            return
+        } else {
+            
+        }
+    }
 }
 
 //MARK: - Action
 extension ViewController {
+    func createUILabel(text: String?) -> UILabel {
+        let label = UILabel()
+        label.textColor = .white
+        label.text = text
+        label.font = UIFont.preferredFont(forTextStyle: .title3)
+        return label
+    }
+    
+    func appendStackView(operatorLabel: UILabel?, numberLabel: UILabel) {
+        let stackView = UIStackView()
+        stackView.spacing = 8
+        if let operatorLabel = operatorLabel {
+            stackView.addArrangedSubview(operatorLabel)
+        }
+        stackView.addArrangedSubview(numberLabel)
+        historyStack.addArrangedSubview(stackView)
+    }
+    
     @objc func inputNumberOnLabel(_ sender: UIButton) {
         switch sender {
         case numberZeroButton:

@@ -7,14 +7,14 @@
 
 import Foundation
 
-enum Operator {
+enum Operator: String {
     private static let lowPriority = 1
     private static let highPriority = 2
 
-    case plus
-    case minus
-    case multiply
-    case divide
+    case plus = "+"
+    case minus = "−"
+    case multiply = "×"
+    case divide = "÷"
 
     var priority: Int {
         switch self {
