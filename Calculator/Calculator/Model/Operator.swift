@@ -33,11 +33,11 @@ enum Operator: String {
         switch symbol {
         case "+":
             return .plus
-        case "-":
+        case "−":
             return .minus
-        case "*":
+        case "×":
             return .multiply
-        case "/":
+        case "÷":
             return .divide
         default:
             throw CalculatorError.unknownOperator

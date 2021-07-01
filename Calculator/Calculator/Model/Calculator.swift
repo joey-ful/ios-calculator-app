@@ -13,6 +13,7 @@ struct Calculator {
     var temporaryNumberStack = Stack<Double>()
     
     mutating func calculate(infix: [String]) throws -> String {
+        postfix = []
         let postfix: [String] = try changeToPostfixNotation(infix: infix)
         do {
             let operationResult = try calculatePostfix(postfix: postfix)

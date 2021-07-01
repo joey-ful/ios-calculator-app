@@ -33,6 +33,28 @@ class ViewController: UIViewController {
     @IBOutlet weak var historyStack: UIStackView!
     
     var infix: [String] = []
+    var calculator = Calculator()
+    
+    @IBAction func equalButtonTapped(_ sender: Any) {
+        guard let currentNumberText = CurrentNumberLabel.text,
+              let currentSignText = CurrentSignLabel.text,
+              currentSignText != "" else {
+            return
+        }
+        infix.append(currentSignText)
+        infix.append(currentNumberText)
+        let currentSignLabel = createUILabel(text: currentSignText)
+        let currentNumberLabel = createUILabel(text: currentNumberText)
+        appendStackView(operatorLabel: currentSignLabel, numberLabel: currentNumberLabel)
+        do {
+        let result = try calculator.calculate(infix: infix)
+            CurrentNumberLabel.text = result
+            CurrentSignLabel.text = ""
+        } catch {
+            CurrentNumberLabel.text = error.localizedDescription
+        }
+        infix = []
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,11 +106,7 @@ class ViewController: UIViewController {
             CurrentNumberLabel.text = "0"
         }
     }
-    
-    func raiseToStack(operator: String, number: String) {
-        
-    }
-    
+
     @IBAction func shiftSignButtonTapped(_ sender: Any) {
         guard let numberText = CurrentNumberLabel.text, numberText != "0" else {
             return
